@@ -68,9 +68,9 @@ class Keys:
     """
     >>> message = [4,5,6,7,1,2,3,1]; ntru = NTRU(2,2,1,257,10007,8); key = Keys(ntru); encrypt=Encrypt(key.h, ntru); e = encrypt.encrypt(message); d = key.decrypt(e); d == polynomials.reduce_mod(message, 257)
     True
-    >>> message = [-1, 0, 1, 1, 0]; ntru = NTRU(2,2,1,3,16,5); key = Keys(ntru); encrypt=Encrypt(key.h, ntru); e = encrypt.encrypt(message); d = key.decrypt(e); d == message
+    >>> message = [-1, 0, 1, 1, 0]; ntru = NTRU(2,2,1,3,16,5); key = Keys(ntru); encrypt=Encrypt(key.h, ntru); e = encrypt.encrypt(message); d = key.decrypt(e); d == message;
     True
-    >>> message = [-1, 0, 1, 1, 0]; ntru = NTRU(2,2,1,3,17,5); key = Keys(ntru); encrypt=Encrypt(key.h, ntru); e = encrypt.encrypt(message); d = key.decrypt(e); d == message
+    >>> message = [-1, 0, 1, 1, 0]; ntru = NTRU(2,2,1,3,17,5); key = Keys(ntru); encrypt=Encrypt(key.h, ntru); e = encrypt.encrypt(message); d = key.decrypt(e); d == message;
     True
     """
     def __init__(self, ntru, f=None, g=None):

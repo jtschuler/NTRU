@@ -29,13 +29,13 @@ class TestTextbook(unittest.TestCase):
         self.assertEqual(expected, actual)
     def test_163d(self):
         m = [-1, 0, 1, 1, 0]
-        enc = Encrypt(key, ntru)
+        enc = Encrypt(key.h, ntru)
         expected = (key.h)
         actual = ([14, 11, 8, 3, 12])
         self.assertEqual(expected, actual)
     def test_163f(self):
         m = [-1, 0, 1, 1, 0]
-        enc = Encrypt(key, ntru)
+        enc = Encrypt(key.h, ntru)
         e = enc.encrypt(m, r=[0,1,0,0,-1])
         expected = [2,2,-7,5,-1]
         actual = e
