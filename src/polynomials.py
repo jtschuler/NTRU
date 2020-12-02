@@ -14,8 +14,15 @@ A polynomial will be a 0 indexed list.
 """
 
 import utils
+from sympy import Matrix
 
 # pylint: disable=invalid-name
+
+def normalize(polynomial1, polynomial2):
+    l = max(len(polynomial1), len(polynomial2))
+    poly1 = [polynomial1[i] if polynomial1[i] else 0 for i in range(l)]
+    poly2 = [polynomial2[i] if polynomial2[i] else 0 for i in range(l)]
+    return (poly1, poly2)
 
 def multiplication(polynomial1, polynomial2, modulus):
     """
@@ -23,9 +30,8 @@ def multiplication(polynomial1, polynomial2, modulus):
     >>> multiplication([1,2,3],[2,5,7],3)
     [31, 30, 23]
     """
-    l = max(len(polynomial1), len(polynomial2))
-    poly1 = [polynomial1[i] if polynomial1[i] else 0 for i in range(l)]
-    poly2 = [polynomial2[i] if polynomial2[i] else 0 for i in range(l)]
+    (poly1, poly2) = normalize(polynomial1, polynomial2)
+    l = len(poly1)
     result = [0 for i in range(l)]
     for i in range(l):
         for j in range(l):
@@ -81,44 +87,10 @@ def leading_coefficient(poly):
     """
     return trim(poly)[-1]
 
-def division(polynomial1, polynomial2, modulus):
+def getnullmatrix(polynomial, N):
     """
-    #>>> division([1], [1], 3)
-    #([1], [0])
-    >>> division([3], [1], 11)
-    ([3], [0])
-    >>> division([1,2], [1,2], 11)
-    ([1], [0])
-    >>> division([1, 0], [1, 0], 11)
-    """
-    poly1 = trim(polynomial1)
-    poly2 = trim(polynomial2)
-    # 0 polynomial
-    q = [0 for _ in polynomial1]
-    # deep copy of polynomial 1
-    r = [i for i in polynomial1]
-    d = degree(polynomial1)
-    c = leading_coefficient(polynomial2)
-    while degree(r) >= d:
-        x = utils.general_linear_congruence(c, modulus, leading_coefficient(r))
-        print(x)
-        print(r)
-        print(d)
-        p = multiplication([x], polynomial2, modulus)
-        print(p)
-        r = subtraction(r, p, modulus)
-        print(r)
-        q[degree(r) - d] = x
-        print(q)
-        break
-    return (q,r)
-
-    
-
-
-def inverse(polynomial, modulus):
-    """
-    >>> pass
+    >>> getnullmatrix([-1,1,1], 5)
+    [[-1, 0, 0, 1, 1, 1], [1, -1, 0, 0, 1, 0], [1, 1, -1, 0, 0, 0], [0, 1, 1, -1, 0, 0], [0, 0, 1, 1, -1, 0]]
     """
     """
     Linear Algebra
@@ -132,8 +104,39 @@ def inverse(polynomial, modulus):
         3f, 2d, 1e, 0
         1f, 3d, 2e, 0
     [f[2,1,3], d[3,2,1], e[1,3,2],[1,0,0]] solve for f d e (mod p)
+    [
+[-1,  0,  0,  1,  1, 1],
+[ 1, -1,  0,  0,  1, 0],
+[ 1,  1, -1,  0,  0, 0],
+[ 0,  1,  1, -1,  0, 0],
+[ 0,  0,  1,  1, -1, 0]]
     """
-    pass
+    d = degree(polynomial)
+    matrix = [[0 for _ in range(N+1)] for _ in range(N)]
+    matrix[0][N] = 1
+    for i in range(N):
+        for j in range(d+1):
+            matrix[(i+j) % N][i] = polynomial[j]
+    return matrix
+
+def getnullvector(polynomial, modulus : int, N):
+    """
+    >>> getnullvector([-1,1,1], 16, 5)
+    [10, 9, 3, 12, 15]
+    >>> getnullvector([-1,1,1], 3, 5)
+    [2, 0, 2, 2, 1]
+    """
+    matrix = Matrix(getnullmatrix(polynomial, N))
+    solution = (-matrix.nullspace()[0])[:-1]
+    for i in range(len(solution)):
+        if solution[i].q != 1:
+            solution = [solution[i]*solution[i].q for i in range(len(solution))]
+        break
+    magic_number = sum(solution)
+    m = utils.multiplicative_inverse(magic_number, modulus)
+    solution = list(map(lambda x: (m*(x % modulus)) , solution))
+    solution = list(map(lambda x: x % modulus, solution))
+    return solution
 
 
 

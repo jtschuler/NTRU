@@ -3,6 +3,7 @@ Copyright 2020
 Jadon Schuler & Justin Baum
 Utilities
 utils.py
+Co-authored-by: Jadon Schuler <jtschuler007@gmail.com>
 """
 
 # pylint: disable=invalid-name
