@@ -32,8 +32,8 @@ def multiplication(polynomial1, polynomial2, modulus = None, N=None):
     Convolution product
     >>> multiplication([1,2,3],[2,5,7])
     [31, 30, 23]
-    >>> multiplication([14,11,8,3,12], [2,2,9,5,15], 16)
-    [2, 15, 11, 5, 15]
+    >>> multiplication([-1,1,1], [2,2,9,5,15], 16)
+    [2, 15, 11, 6, 15]
     """
     (N, poly1, poly2) = normalize(polynomial1, polynomial2, N)
     result = [0 for i in range(N)]
@@ -138,7 +138,7 @@ def getnullvector(polynomial, modulus : int, N):
     """
     matrix = Matrix(getnullmatrix(polynomial, N))
     solution = (-matrix.nullspace()[0])[:-1]
-    while (any([i.q != 1 for i in solution])):
+    for j in range(5):
         for i in range(len(solution)):
             if solution[i].q != 1:
                 solution = [solution[i]*solution[i].q for i in range(len(solution))]
@@ -165,8 +165,9 @@ def reduce_mod(polynomial, mod):
     [1, 2, -2, -1, 0, 1, 2, -2]
     #>>> reduce_mod([2,-1,11,-10,-1], 16)
     [2, -1, -5, 6, -1]
+    >>> reduce_mod([2,0,1,1,0], 3)
+    [-1, 0, 1, 1, 0]
     """
-    return polynomial
     bound = mod // 2
     return list(map(lambda x: x % mod if (x % mod) <= bound else (x % mod) - mod, polynomial))
 

@@ -33,9 +33,16 @@ class TestTextbook(unittest.TestCase):
         expected = (key.h)
         actual = ([14, 11, 8, 3, 12])
         self.assertEqual(expected, actual)
+    def test_163f(self):
+        m = [-1, 0, 1, 1, 0]
+        enc = Encrypt(key, ntru)
+        e = enc.encrypt(m, r=[0,1,0,0,-1])
+        expected = [2,2,-7,5,-1]
+        actual = e
+        self.assertEqual(expected, actual)
     def test_163e(self):
-        d = key.decrypt([14,11,8,3,12])
-        expected = [2,15,10,6,15]
+        d = key.decrypt([2,2,-7,5,-1])
+        expected = [-1,0,1,1,0]
         self.assertEqual(d, expected)
 if __name__ == '__main__':
     unittest.main()
