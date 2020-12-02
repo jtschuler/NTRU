@@ -13,18 +13,23 @@ A polynomial will be a 0 indexed list.
 [0, 5, 0, 11]
 """
 
+import utils
+
+# pylint: disable=invalid-name
+
 def multiplication(polynomial1, polynomial2, modulus):
     """
     Convolution product
     >>> multiplication([1,2,3],[2,5,7],3)
     [31, 30, 23]
     """
-    poly1 = [polynomial1[i] if polynomial1[i] else 0 for i in range(modulus)]
-    poly2 = [polynomial2[i] if polynomial2[i] else 0 for i in range(modulus)]
-    result = [0 for i in range(modulus)]
-    for i in range(modulus):
-        for j in range(modulus):
-            index = (i+j) % modulus
+    l = max(len(polynomial1), len(polynomial2))
+    poly1 = [polynomial1[i] if polynomial1[i] else 0 for i in range(l)]
+    poly2 = [polynomial2[i] if polynomial2[i] else 0 for i in range(l)]
+    result = [0 for i in range(l)]
+    for i in range(l):
+        for j in range(l):
+            index = (i+j) % l 
             result[index] += poly1[i] * poly2[j]
             #result[index] %= modulus
     return result
@@ -43,9 +48,10 @@ def subtraction(polynomial1, polynomial2, modulus):
     >>> subtraction([1,2,3], [0,1,2], 3)
     [1, 1, 1]
     """
-    poly1 = [polynomial1[i] if polynomial1[i] else 0 for i in range(modulus)]
-    poly2 = [polynomial2[i] if polynomial2[i] else 0 for i in range(modulus)]
-    return [poly1[i] - poly2[i] for i in range(modulus)]
+    l = max(len(polynomial1), len(polynomial2))
+    poly1 = [polynomial1[i] if polynomial1[i] else 0 for i in range(l)]
+    poly2 = [polynomial2[i] if polynomial2[i] else 0 for i in range(l)]
+    return [poly1[i] - poly2[i] for i in range(l)]
 
 def trim(poly_):
     """
@@ -53,7 +59,7 @@ def trim(poly_):
     [1, 2, 3, 4, 0, 0, 6]
     """
     poly = [i for i in poly_]
-    while poly[-1] == 0:
+    while len(poly) > 0 and poly[-1] == 0:
         poly = poly[:-1]
     return poly
 
@@ -66,8 +72,24 @@ def degree(poly):
     """
     return len(trim(poly)) - 1
 
+def leading_coefficient(poly):
+    """
+    >>> leading_coefficient([1,2,3,0,0,0])
+    3
+    >>> leading_coefficient([1,2,3,5,0,0,0,1,2,3,4,5,0,0])
+    5
+    """
+    return trim(poly)[-1]
+
 def division(polynomial1, polynomial2, modulus):
     """
+    #>>> division([1], [1], 3)
+    #([1], [0])
+    >>> division([3], [1], 11)
+    ([3], [0])
+    >>> division([1,2], [1,2], 11)
+    ([1], [0])
+    >>> division([1, 0], [1, 0], 11)
     """
     poly1 = trim(polynomial1)
     poly2 = trim(polynomial2)
@@ -76,9 +98,21 @@ def division(polynomial1, polynomial2, modulus):
     # deep copy of polynomial 1
     r = [i for i in polynomial1]
     d = degree(polynomial1)
-    c = polynomial2[-1]
+    c = leading_coefficient(polynomial2)
     while degree(r) >= d:
-        
+        x = utils.general_linear_congruence(c, modulus, leading_coefficient(r))
+        print(x)
+        print(r)
+        print(d)
+        p = multiplication([x], polynomial2, modulus)
+        print(p)
+        r = subtraction(r, p, modulus)
+        print(r)
+        q[degree(r) - d] = x
+        print(q)
+        break
+    return (q,r)
+
     
 
 
