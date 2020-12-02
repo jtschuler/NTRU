@@ -50,7 +50,6 @@ def main():
         f = [int(x) for x in filey.readline().split()]
         g = [int(x) for x in filey.readline().split()]
         key = Keys(ntru, f, g)
-        print(str(key))
     with open(args.m, "r") as f:
         matrix = [[int(x) for x in line.split()] for line in f.read().splitlines()]
     with open(args.o, "wb") as f:

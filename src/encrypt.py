@@ -50,17 +50,18 @@ def main():
     cipher = None
     with open(m, "rb") as f:
         i = 0
-        currbyte = [0 for _ in range(8)]
+        N = ntru.N
+        currbyte = [0 for _ in range(N)]
         data = True
         while data:
             data = f.read(1)
             j = int.from_bytes(data, "little")
             currbyte[i] = j
-            if i == 7:
+            if i == N - 1:
                 currbyte = polynomials.reduce_mod(currbyte, ntru.p)
                 message.append(currbyte)
                 i = 0
-                currbyte = [0 for _ in range(8)]
+                currbyte = [0 for _ in range(N)]
                 continue
             i += 1
         if(any([i != 0 for i in currbyte])): message.append(currbyte)
