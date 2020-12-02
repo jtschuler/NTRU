@@ -16,25 +16,25 @@ src/utils.py:           Modular arithmetic helper functions
 Built in Python 3.9
 
 ## Testing
-To test a module, run the following:
+To test a module, run the following:  
 `python3 src/module.py -v`
 
 ## Key Generation
-To generate keys, run the following:
+To generate keys, run the following:  
 `src/gen_key.py -pub <pubkeyfile> -pri <prikeyfile>`
 
 This generates and places the public key in <pubkeyfile> and the private key
 information in <prikeyfile>.
 
 ## Message Encryption
-To encrypt a message file, run the following:
+To encrypt a message file, run the following:  
 `src/encrypt.py -pub <pubkeyfile> -m <messagefile> -o <outputfile>`
 
 This uses the public key in <pubkeyfile> to encrypt the message in <messagefile>,
 and writes the cipher text as space separated integers into <outputfile>.
 
 ## Message Decryption
-To encrypt a message file, run the following:
+To encrypt a message file, run the following:  
 `src/encrypt.py -pri <prikeyfile> -m <messagefile> -o <outputfile>`
 
 This uses the private key information stored in <prikeyfile> to decrypt the
