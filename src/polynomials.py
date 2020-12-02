@@ -138,6 +138,39 @@ def getnullvector(polynomial, modulus : int, N):
     solution = list(map(lambda x: x % modulus, solution))
     return solution
 
+def getinverse(polynomial, modulus : int, N):
+    """
+    >>> getinverse([-1,1,1], 16, 5)
+    [10, 9, 3, 12, 15]
+    >>> getinverse([-1,1,1], 3, 5)
+    [2, 0, 2, 2, 1]
+    """
+    d = degree(polynomial)
+    matrix = [[0 for _ in range(N)] for _ in range(N)]
+    for i in range(N):
+        for j in range(d+1):
+            matrix[(i+j) % N][i] = polynomial[j]
+
+    matrix = Matrix(matrix)
+    det = matrix.det()
+
+    # We can remove this since there will always be a solution lol
+    # Just a sanity check
+    if det == 0:
+        print('singular matrix')
+        exit()
+
+    matrix_inv = matrix.inv() * det * utils.multiplicative_inverse(det, modulus)
+
+    v = [0 for _ in range(N)]
+    v[0] = 1
+    v = Matrix(v)
+
+    result = matrix_inv * v
+    inverse = [result[i] % modulus for i in range(len(result))]
+
+    return inverse
+
 
 
 
