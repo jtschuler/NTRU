@@ -50,3 +50,7 @@ message in <cipherfile>, and writes the decrypted message into <outputfile>.
 ## IMPORTANT
 There is a probability that a certain key may not have a successful decryption[see here](https://crypto.stackexchange.com/questions/621/does-ntru-decrypt-correctly-now). In our experience about 8-9 out of every ten are successful. Values for df should be no more
 than N/2 (ceiling), while values of dg should be no more than N/2 (floor).
+
+## Parameters
+
+To change parameters check `defaults.py`, and change coresponding values.
