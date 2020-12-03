@@ -18,6 +18,9 @@ Built in Python 3.9
 Dependencies:  
 sympy
 
+To install:
+`pip3 install sympy`
+
 ## Testing
 To test a module, run the following:  
 `python3 src/module.py -v`
@@ -45,8 +48,5 @@ This uses the private key information stored in <prikeyfile> to decrypt the
 message in <cipherfile>, and writes the decrypted message into <outputfile>.
 
 ## IMPORTANT
-This implementation of NTRU assumes messages are encoded as ASCII text. The
-message is encrypted using blocks of degree N polynomials, where coefficients
-are the ASCII values of each byte. As such, we recommend values of p be no less
-than 257. Values of q should be larger than p. Values for df should be no more
+There is a probability that a certain key may not have a successful decryption[see here](https://crypto.stackexchange.com/questions/621/does-ntru-decrypt-correctly-now). In our experience about 8-9 out of every ten are successful. Values for df should be no more
 than N/2 (ceiling), while values of dg should be no more than N/2 (floor).
