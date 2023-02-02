@@ -4,7 +4,6 @@ Jadon Schuler & Justin Baum
 Polynomial Utility Functions
 polynomials.py
 """
-
 """
 A polynomial will be a 0 indexed list.
 3 + 2x + 5x^2
@@ -18,16 +17,18 @@ from sympy import Matrix
 
 # pylint: disable=invalid-name
 
+
 def normalize(polynomial1, polynomial2, N=None):
     l = max(len(polynomial1), len(polynomial2))
     N = N if N else l
     p1l = len(polynomial1)
     p2l = len(polynomial2)
-    poly1 = [polynomial1[i] if p1l > i  else 0 for i in range(N)]
+    poly1 = [polynomial1[i] if p1l > i else 0 for i in range(N)]
     poly2 = [polynomial2[i] if p2l > i else 0 for i in range(N)]
     return (N, poly1, poly2)
 
-def multiplication(polynomial1, polynomial2, modulus = None, N=None):
+
+def multiplication(polynomial1, polynomial2, modulus=None, N=None):
     """
     Convolution product
     >>> multiplication([1,2,3],[2,5,7])
@@ -39,10 +40,11 @@ def multiplication(polynomial1, polynomial2, modulus = None, N=None):
     result = [0 for i in range(N)]
     for i in range(N):
         for j in range(N):
-            index = (i+j) % N 
+            index = (i + j) % N
             result[index] += poly1[i] * poly2[j]
             if modulus: result[index] %= modulus
     return result
+
 
 def addition(polynomial1, polynomial2, modulus=None, N=None):
     """
@@ -56,12 +58,13 @@ def addition(polynomial1, polynomial2, modulus=None, N=None):
         return [(x[0] + x[1]) % modulus for x in zip(poly1, poly2)]
     return [(x[0] + x[1]) for x in zip(poly1, poly2)]
 
+
 def subtraction(polynomial1, polynomial2, modulus=None, N=None):
     """
     >>> subtraction([1,2,3], [0,1,2], 3)
     [1, 1, 1]
     """
-    (_1N, poly1, poly2) = normalize(polynomial1, polynomial2, N) 
+    (_1N, poly1, poly2) = normalize(polynomial1, polynomial2, N)
     if modulus:
         return [(x[0] - x[1]) % modulus for x in zip(poly1, poly2)]
     return [(x[0] - x[1]) for x in zip(poly1, poly2)]
@@ -77,6 +80,7 @@ def trim(poly_):
         poly = poly[:-1]
     return poly
 
+
 def degree(poly):
     """
     >>> degree([1,2,3,0,0,0])
@@ -86,6 +90,7 @@ def degree(poly):
     """
     return len(trim(poly)) - 1
 
+
 def leading_coefficient(poly):
     """
     >>> leading_coefficient([1,2,3,0,0,0])
@@ -94,6 +99,7 @@ def leading_coefficient(poly):
     5
     """
     return trim(poly)[-1]
+
 
 def getnullmatrix(polynomial, N):
     """
@@ -120,14 +126,15 @@ def getnullmatrix(polynomial, N):
 [ 0,  0,  1,  1, -1, 0]]
     """
     d = degree(polynomial)
-    matrix = [[0 for _ in range(N+1)] for _ in range(N)]
+    matrix = [[0 for _ in range(N + 1)] for _ in range(N)]
     matrix[0][N] = 1
     for i in range(N):
-        for j in range(d+1):
-            matrix[(i+j) % N][i] = polynomial[j]
+        for j in range(d + 1):
+            matrix[(i + j) % N][i] = polynomial[j]
     return matrix
 
-def getnullvector(polynomial, modulus : int, N):
+
+def getnullvector(polynomial, modulus: int, N):
     """
     >>> getnullvector([-1,1,1], 16, 5)
     [10, 9, 3, 12, 15]
@@ -141,7 +148,9 @@ def getnullvector(polynomial, modulus : int, N):
     for j in range(5):
         for i in range(len(solution)):
             if solution[i].q != 1:
-                solution = [solution[i]*solution[i].q for i in range(len(solution))]
+                solution = [
+                    solution[i] * solution[i].q for i in range(len(solution))
+                ]
             break
     first_row = list(matrix)[:N]
     # [2,3,5]
@@ -149,16 +158,19 @@ def getnullvector(polynomial, modulus : int, N):
     # 2c + 4c + 5c = 1
     eq_val = sum(map(lambda x: x[0] * x[1], zip(first_row, solution)))
     m = utils.multiplicative_inverse(eq_val, modulus)
-    solution = list(map(lambda x: (m*(x % modulus)) , solution))
+    solution = list(map(lambda x: (m * (x % modulus)), solution))
     solution = list(map(lambda x: x % modulus, solution))
     return solution
+
 
 def scalar_mult(polynomial, k, modulus):
     """
     >>> scalar_mult([1,2,3,4,5], 3, 7)
     [3, 6, 2, 5, 1]
     """
-    return [(k*i) % modulus for i in polynomial]
+    return [(k * i) % modulus for i in polynomial]
+
+
 def reduce_mod(polynomial, mod):
     """
     #>>> reduce_mod([1,2,3,4,5,6,7,8], 5)
@@ -169,9 +181,12 @@ def reduce_mod(polynomial, mod):
     [-1, 0, 1, 1, 0]
     """
     bound = mod // 2
-    return list(map(lambda x: x % mod if (x % mod) <= bound else (x % mod) - mod, polynomial))
+    return list(
+        map(lambda x: x % mod
+            if (x % mod) <= bound else (x % mod) - mod, polynomial))
 
-def getinverse(polynomial, modulus : int, N):
+
+def getinverse(polynomial, modulus: int, N):
     """
     >>> getinverse([-1,1,1], 16, 5)
     [10, 9, 3, 12, 15]
@@ -181,8 +196,8 @@ def getinverse(polynomial, modulus : int, N):
     d = degree(polynomial)
     matrix = [[0 for _ in range(N)] for _ in range(N)]
     for i in range(N):
-        for j in range(d+1):
-            matrix[(i+j) % N][i] = polynomial[j]
+        for j in range(d + 1):
+            matrix[(i + j) % N][i] = polynomial[j]
 
     matrix = Matrix(matrix)
     det = matrix.det()
@@ -191,7 +206,8 @@ def getinverse(polynomial, modulus : int, N):
     # Just a sanity check
     if det == 0:
         raise Exception("Singular matrix")
-    matrix_inv = matrix.inv() * det * utils.multiplicative_inverse(det, modulus)
+    matrix_inv = matrix.inv() * det * utils.multiplicative_inverse(
+        det, modulus)
 
     v = [0 for _ in range(N)]
     v[0] = 1
@@ -200,11 +216,13 @@ def getinverse(polynomial, modulus : int, N):
     inverse = [result[i] % modulus for i in range(len(result))]
     return inverse
 
+
 def strpoly(poly):
     s = ""
     deg = 0
     for (j, i) in enumerate(poly):
-        s += (str(i) + ("x^{}".format(deg) if deg > 0 else "") + " + ") if i != 0 else ""
+        s += (str(i) + ("x^{}".format(deg) if deg > 0 else "") +
+              " + ") if i != 0 else ""
         deg += 1
     return s
 

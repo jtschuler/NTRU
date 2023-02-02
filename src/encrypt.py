@@ -12,35 +12,28 @@ from defaults import ntru
 from ntru import Encrypt
 import polynomials
 
+
 def main():
     """
     Driver Code
     """
-    parser = argparse.ArgumentParser(description=
-    """
+    parser = argparse.ArgumentParser(description="""
     NTRU Encryption
-    """
-    )
+    """)
     # Input File
-    parser.add_argument(
-        "-pub",
-        action="store",
-        help="Public key file",
-        required=True
-    )
+    parser.add_argument("-pub",
+                        action="store",
+                        help="Public key file",
+                        required=True)
     # Output File
-    parser.add_argument(
-        "-m",
-        action="store",
-        help="Message file",
-        required=True
-    )
-    parser.add_argument(
-        "-o",
-        action="store",
-        help="Output file",
-        required=True
-    )
+    parser.add_argument("-m",
+                        action="store",
+                        help="Message file",
+                        required=True)
+    parser.add_argument("-o",
+                        action="store",
+                        help="Output file",
+                        required=True)
     args = parser.parse_args()
     pub = args.pub
     h = None
@@ -64,7 +57,7 @@ def main():
                 currbyte = [0 for _ in range(N)]
                 continue
             i += 1
-        if(any([i != 0 for i in currbyte])): message.append(currbyte)
+        if (any([i != 0 for i in currbyte])): message.append(currbyte)
     with open(pub, "r") as f:
         h = [int(x) for x in f.readline().split()]
         enc = Encrypt(h, ntru)
@@ -72,5 +65,7 @@ def main():
     with open(o, "w") as ou:
         s = "\n".join([" ".join([str(v) for v in row]) for row in cipher])
         ou.write(s)
+
+
 if __name__ == "__main__":
     main()
